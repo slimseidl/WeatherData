@@ -61,3 +61,9 @@ class Weather:
         def get_sum_precip(self):
             weather_info = self.get_weather()
             return [(yearly["year"], yearly["precipitation"]) for yearly in weather_info]
+
+# Calling methods to test
+# adir = WeatherData(43.764, -73.7585, 2, 10, range(2020,2025))
+# print(f'Average temp for Adirondack, NY on October 2nd in year range:', adir.get_mean_temp())
+# print(f'Max wind speed for Adirondack, NY on October 2nd in year range:', adir.get_max_wind())
+# print(f'Total precipitation for Adirondack, NY on October 2nd in year range:', adir.get_sum_precip())

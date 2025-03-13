@@ -72,3 +72,56 @@ for annual in annual_weather:
 session.commit()
 session.close()
 
+# Defining a method to query the weather data from the Weather table
+
+def query_weather(latitude, longitude, month, day, years):
+
+    # Connecting to the database
+    conn = sqlite3.connect('weather.db')
+    # Creating a cursor object to use SQL commands
+    cursor = conn.cursor()
+    # Converting years to a comma separated string to query records from multiple years
+    years_str = ",".join(years)
+
+    query = f"""Select * From Weather Where latitude = {latitude} and longitude = {longitude} and month = {month} and day = {day} and years in ({years_str})"""
+
+    cursor.execute(query)
+    # Retrieving all rows from the query
+    results = cursor.fetchall()
+
+
+    if results:
+        # If there are results, column names correspond to fields in the database
+        columns = ("Month", "Day", "Year", "Mean Temperature", "Min Temperature", "Max Temperature", "Mean Wind","Min Wind", "Max Wind", "Total Precipitation", "Min Precipitation", "Max Precipitation")
+
+        # Using a loop to iterate through the rows, storing the rows in a dictionary where the result's index matches the column order of the database
+        pretty_results = []
+        for result in results:
+            pretty_result = {
+                "Month": result[3],
+                "Day": result[4],
+                "Year": result[5],
+                "Mean Temperature": result[6],
+                "Min Temperature": result[7],
+                "Max Temperature": result[8],
+                "Mean Wind": result[9],
+                "Min Wind": result[10],
+                "Max Wind": result[11],
+                "Total Precipitation": result[12],
+                "Min Precipitation": result[13],
+                "Max Precipitation": result[14]
+            }
+            pretty_results.append(pretty_result)
+        # Pretty Printing / Formatting Table to make it more readable
+        # Headers value means the keys from the dictionary are used as column headers
+        # Fancy grid uses a fancy table style
+        print(tabulate(pretty_results, headers="keys", tablefmt="fancy_grid"))
+    else:
+        print("No results found.")
+
+    # Closing the cursor and connection
+    cursor.close()
+    conn.close()
+
+#Querying the weather
+query_weather(latitude, longitude, month, day, years)
